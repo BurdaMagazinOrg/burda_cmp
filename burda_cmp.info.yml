@@ -1,0 +1,5 @@
+name: Consent management platform
+type: module
+description: Contains custom code for the consent management platform implementation via Liveramp.
+core: 8.x
+package: Burda
