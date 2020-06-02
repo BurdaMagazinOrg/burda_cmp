@@ -1,0 +1,7 @@
+burda_cmp.settings:
+  path: '/admin/config/services/cmp'
+  defaults:
+    _form: '\Drupal\burda_cmp\Form\SettingsForm'
+    _title: 'Consent management platform'
+  requirements:
+    _permission: 'administer site configuration'

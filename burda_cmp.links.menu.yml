@@ -1,0 +1,5 @@
+burda_cmp.settings:
+  title: 'Consent management platform'
+  description: 'Configure consent management platform integration.'
+  parent: system.admin_config_services
+  route_name: burda_cmp.settings

@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * The consent management platform implementation via Liveramp.
+ */
+
+use Drupal\Core\Cache\CacheableMetadata;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function burda_cmp_page_attachments(array &$page) {
+  /** @var \Drupal\Core\Config\ImmutableConfig $config */
+  $config = \Drupal::config('burda_cmp.settings');
+  $liveramp_script_url = $config->get('liveramp_script_url');
+
+  CacheableMetadata::createFromRenderArray($page)
+    ->addCacheableDependency($config)
+    ->applyTo($page);
+
+  // Liveramp init script.
+  if ($liveramp_script_url) {
+    $page['#attached']['html_head'][] = [
+      [
+        '#tag' => 'script',
+        '#attributes' => [
+          'type' => 'text/javascript',
+          'src' => $liveramp_script_url,
+        ],
+        '#weight' => -100,
+      ],
+      'burda_cmp_init',
+    ];
+  }
+}

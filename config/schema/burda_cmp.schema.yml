@@ -1,0 +1,7 @@
+burda_cmp.settings:
+  type: config_object
+  label: 'Consent management platform settings'
+  mapping:
+    liveramp_script_url:
+      type: string
+      label: 'Liveramp script URL'
