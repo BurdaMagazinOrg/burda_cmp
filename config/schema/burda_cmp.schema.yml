@@ -4,4 +4,4 @@ burda_cmp.settings:
   mapping:
     liveramp_script_url:
       type: string
-      label: 'Liveramp script URL'
+      label: 'LiveRamp script URL'

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * The consent management platform implementation via Liveramp.
+ * The consent management platform implementation via LiveRamp.
  */
 
 use Drupal\Core\Cache\CacheableMetadata;
@@ -19,7 +19,7 @@ function burda_cmp_page_attachments(array &$page) {
     ->addCacheableDependency($config)
     ->applyTo($page);
 
-  // Liveramp init script.
+  // LiveRamp init script.
   if ($liveramp_script_url) {
     $page['#attached']['html_head'][] = [
       [

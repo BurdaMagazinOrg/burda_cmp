@@ -34,7 +34,7 @@ class SettingsForm extends ConfigFormBase {
 
     $form['liveramp_script_url'] = [
       '#type' => 'url',
-      '#title' => $this->t('Liveramp script URL'),
+      '#title' => $this->t('LiveRamp script URL'),
       '#default_value' => $config->get('liveramp_script_url'),
       '#required' => TRUE,
     ];
