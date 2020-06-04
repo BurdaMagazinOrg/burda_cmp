@@ -8,6 +8,47 @@
 use Drupal\Core\Cache\CacheableMetadata;
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function burda_cmp_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'library_info_alter') {
+    // Move this hook implementation to the end of the list.
+    // \Drupal::moduleHandler()->getImplementations()
+    // iterates through $implementations with a foreach loop which PHP iterates
+    // in the order that the items were added, so to move an item to the end of
+    // the array, we remove it and then add it.
+    $group = $implementations['burda_cmp'];
+    unset($implementations['burda_cmp']);
+    $implementations['burda_cmp'] = $group;
+  }
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function burda_cmp_library_info_alter(&$libraries, $extension) {
+  // Process all registered JavaScript files that need to be only loaded when a
+  // consent is given. Therefore information about these files are added to
+  // 'burda_cmp' module's JavaScript settings and loaded dynamically based on
+  // the consent status.
+  foreach ($libraries as $name => &$library) {
+    if (!empty($library['js'])) {
+      foreach ($library['js'] as $js => &$definition) {
+        if (isset($definition['burda_cmp'])) {
+          $parsed = _burda_cmp_parse_js_definition($js, $extension, $definition);
+
+          $script = file_url_transform_relative(file_create_url($parsed['data']));
+          $library['drupalSettings']['burdaCmp'][$extension][$script] = $definition['burda_cmp'];
+
+          // Remove definition as it is loaded on demand now.
+          unset($library['js'][$js]);
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_page_attachments().
  */
 function burda_cmp_page_attachments(array &$page) {
@@ -33,4 +74,77 @@ function burda_cmp_page_attachments(array &$page) {
       'burda_cmp_init',
     ];
   }
+}
+
+/**
+ * Parse a library's JavaScript definition.
+ *
+ * This is a verbatim copy of LibraryDiscoveryParser::buildByExtension() to have
+ * the same logic for when the $options['data'] array item is set.
+ *
+ * @param string $source
+ *   The script file path/URI.
+ * @param string $extension
+ *   The name of the extension that registered a library.
+ * @param array $options
+ *   The definition options for the JavaScript file.
+ *
+ * @see \Drupal\Core\Asset\LibraryDiscoveryParser::buildByExtension()
+ */
+function _burda_cmp_parse_js_definition($source, $extension, array $options) {
+  if ($extension === 'core') {
+    $path = 'core';
+  }
+  else {
+    if (\Drupal::moduleHandler()->moduleExists($extension)) {
+      $extension_type = 'module';
+    }
+    else {
+      $extension_type = 'theme';
+    }
+    $path = drupal_get_path($extension_type, $extension);
+  }
+
+  if ($options['type'] == 'external') {
+    $options['data'] = $source;
+  }
+
+  // Determine the file asset URI.
+  else {
+    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+    if ($source[0] === '/') {
+      // An absolute path maps to DRUPAL_ROOT / base_path().
+      if ($source[1] !== '/') {
+        $options['data'] = substr($source, 1);
+      }
+
+      // A protocol-free URI (e.g., //cdn.com/example.js) is external.
+      else {
+        $options['type'] = 'external';
+        $options['data'] = $source;
+      }
+    }
+
+    // A stream wrapper URI (e.g., public://generated_js/example.js).
+    elseif ($stream_wrapper_manager->isValidUri($source)) {
+      $options['data'] = $source;
+    }
+
+    // A regular URI (e.g., http://example.com/example.js) without
+    // 'external' explicitly specified, which may happen if, e.g.
+    // libraries-override is used.
+    elseif (count(explode('://', $source)) === 2) {
+      $options['type'] = 'external';
+      $options['data'] = $source;
+    }
+
+    // By default, file paths are relative to the registering extension.
+    else {
+      $options['data'] = $path . '/' . $source;
+    }
+  }
+
+  return $options;
 }

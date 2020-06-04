@@ -1,3 +1,12 @@
+liveramp.conditional-scripts:
+  version: VERSION
+  js:
+    js/liveramp/burda-cmp.liveramp.conditional-scripts.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+
 liveramp.open-privacy-manager:
   version: VERSION
   js:
