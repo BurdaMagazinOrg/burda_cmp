@@ -1,3 +1,12 @@
+liveramp.conditional-content:
+  version: VERSION
+  js:
+    js/liveramp/burda-cmp.liveramp.conditional-content.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+
 liveramp.conditional-scripts:
   version: VERSION
   js:

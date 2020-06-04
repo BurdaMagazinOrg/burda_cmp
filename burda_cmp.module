@@ -77,6 +77,26 @@ function burda_cmp_page_attachments(array &$page) {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function burda_cmp_theme($existing, $type, $theme, $path) {
+  $items = [];
+
+  // Conditional content (only displayed when specific consent is given).
+  $items['burda_cmp_conditional_content'] = [
+    'variables' => [
+      'content' => NULL,
+      'message' => NULL,
+      'purposes' => [],
+      'vendor' => NULL,
+    ],
+    'file' => 'burda_cmp.theme.inc',
+  ];
+
+  return $items;
+}
+
+/**
  * Parse a library's JavaScript definition.
  *
  * This is a verbatim copy of LibraryDiscoveryParser::buildByExtension() to have
