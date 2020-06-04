@@ -1,3 +1,11 @@
+block.settings.burda_cmp_liveramp_open_privacy_manager:*:
+  type: block_settings
+  label: 'Open privacy manager block (LiveRamp)'
+  mapping:
+    link_text:
+      type: label
+      label: 'Link text'
+
 burda_cmp.settings:
   type: config_object
   label: 'Consent management platform settings'

@@ -1,0 +1,7 @@
+liveramp.open-privacy-manager:
+  version: VERSION
+  js:
+    js/liveramp/burda-cmp.liveramp.open-privacy-manager.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
