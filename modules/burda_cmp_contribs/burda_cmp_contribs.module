@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Adjustments for CMP compliant usage of selected contrib extensions.
+ */
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function burda_cmp_contribs_library_info_alter(&$libraries, $extension) {
+  // Prepare extension/libraries definitions for scripts that should be loaded
+  // only when consent is given.
+  $adjust = _bnp_cmp_contribs_adjust();
+
+  // Process libraries (if registered for adjustments above).
+  if (isset($adjust[$extension])) {
+    foreach ($libraries as $library_name => &$library_definition) {
+      if (!empty($library_definition['js'])) {
+        $adjustment = NULL;
+        if (isset($adjust[$extension][$library_name])) {
+          $adjustment = $adjust[$extension][$library_name];
+        }
+        elseif (isset($adjust[$extension]['*'])) {
+          $adjustment = $adjust[$extension]['*'];
+        }
+
+        foreach ($library_definition['js'] as &$js_definition) {
+          $js_definition['burda_cmp'] = $adjustment;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Returns data about contribs needing adjustments for CMP compliant usage.
+ *
+ * @return array
+ *   A keyed array of extensions/libraries to adjust. The key is the machine
+ *   name of the extension, the value is another keyed array for all libraries
+ *   to adjust. Its key is the library name or '*' to target all defined
+ *   libraries and the value is a keyed array with the following items:
+ *     - vendor: The vendor ID to check consent for.
+ *     - purposes: An array of purpose ID(s) to check consent for.
+ */
+function _bnp_cmp_contribs_adjust() {
+  $adjust = [
+    'riddle_marketplace' => [
+      '*' => [
+        'vendor' => 10196,
+        'purposes' => [1,2,3,4,5,6,7,8,9,10,25,26,27,28,29,30]
+      ],
+    ],
+  ];
+
+  return $adjust;
+}
