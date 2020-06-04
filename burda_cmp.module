@@ -105,7 +105,7 @@ function _burda_cmp_parse_js_definition($source, $extension, array $options) {
     $path = drupal_get_path($extension_type, $extension);
   }
 
-  if ($options['type'] == 'external') {
+  if (!empty($options['type']) && $options['type'] === 'external') {
     $options['data'] = $source;
   }
 
