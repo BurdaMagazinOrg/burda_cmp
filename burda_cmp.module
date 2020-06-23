@@ -89,6 +89,7 @@ function burda_cmp_theme($existing, $type, $theme, $path) {
       'message' => NULL,
       'purposes' => [],
       'vendor' => NULL,
+      'toggle_label' => NULL,
     ],
     'file' => 'burda_cmp.theme.inc',
   ];

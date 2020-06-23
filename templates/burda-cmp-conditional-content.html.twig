@@ -1,5 +1,3 @@
-{# @todo Final template structure. #}
-
 {%- if content is not empty and vendor is not empty -%}
   {{- attach_library('burda_cmp/liveramp.conditional-content') -}}
 
@@ -7,19 +5,23 @@
     <div class="burda-cmp-conditional-content__content">
       {# Placeholder message (if any). #}
       {%- if message is not empty -%}
-        <div data-burda-cmp-conditional-content-placeholder>
-          {{- message -}}
+        <div data-burda-cmp-conditional-content-placeholder style="display: none;">
+          <div class="burda-cmp-conditional-content__message">
+            {{- message -}}
+          </div>
+
+          {# Toggle to inject/remove actual conditional content. #}
+          {%- if toggle_label is not empty -%}
+            <a href="#!" data-burda-cmp-toggle class="burda-cmp-conditional-content__toggle-button">{{- toggle_label -}}</a>
+          {%- endif -%}
         </div>
       {%- endif -%}
 
       {# Wrapper for actual injected content. #}
       <div data-burda-cmp-injected-content></div>
 
-      {# Toggle to inject/remove actual conditional content. #}
-      <a href="#!" data-burda-cmp-toggle>Toggle</a>
-
       {# Show consent manager. #}
-      <a href="#!" data-burda-cmp-show-consent-manager>Consent Manager</a>
+      {# <a href="#!" data-burda-cmp-show-consent-manager>Consent Manager</a> #}
     </div>
   </div>
 {%- endif -%}
