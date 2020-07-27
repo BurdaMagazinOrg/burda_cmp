@@ -1,0 +1,7 @@
+{
+  "name": "burdamagazinorg/burda_cmp",
+  "description": "Contains custom code for the consent management platform implementation via LiveRamp.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+}
