@@ -3,5 +3,10 @@
   "description": "Contains custom code for the consent management platform implementation via LiveRamp.",
   "type": "drupal-module",
   "license": "GPL-2.0-or-later",
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-8.x-1.x": "1.x-dev"
+    }
+  }
 }
