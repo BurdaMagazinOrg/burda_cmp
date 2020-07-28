@@ -27,6 +27,9 @@ function burda_cmp_module_implements_alter(&$implementations, $hook) {
  * Implements hook_library_info_alter().
  */
 function burda_cmp_library_info_alter(&$libraries, $extension) {
+  /** @var \Drupal\burda_cmp\StaticConsentDataInterface $static_consent_data */
+  $static_consent_data = \Drupal::service('burda_cmp.static_consent_data');
+
   // Process all registered JavaScript files that need to be only loaded when a
   // consent is given. Therefore information about these files are added to
   // 'burda_cmp' module's JavaScript settings and loaded dynamically based on
@@ -36,6 +39,20 @@ function burda_cmp_library_info_alter(&$libraries, $extension) {
       foreach ($library['js'] as $js => &$definition) {
         if (isset($definition['burda_cmp'])) {
           $parsed = _burda_cmp_parse_js_definition($js, $extension, $definition);
+
+          // Ensure numeric vendor ID.
+          if (!empty($definition['burda_cmp']['vendor'])) {
+            if (!is_numeric($definition['burda_cmp']['vendor'])) {
+              $definition['burda_cmp']['vendor'] = $static_consent_data->getVendorId($definition['burda_cmp']['vendor']);
+            }
+          }
+
+          // Determine purposes by vendor (if empty).
+          if (!empty($definition['burda_cmp']['vendor'])) {
+            if (empty($definition['burda_cmp']['purposes'])) {
+              $definition['burda_cmp']['purposes'] = $static_consent_data->getPurposeIds($definition['burda_cmp']['vendor']);
+            }
+          }
 
           $script = file_url_transform_relative(file_create_url($parsed['data']));
           $library['drupalSettings']['burdaCmp'][$extension][$script] = $definition['burda_cmp'];
