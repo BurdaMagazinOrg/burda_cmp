@@ -1,0 +1,3 @@
+services:
+  burda_cmp.static_consent_data:
+    class: Drupal\burda_cmp\StaticConsentData
