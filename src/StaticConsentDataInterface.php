@@ -62,11 +62,13 @@ interface StaticConsentDataInterface {
    *
    * @return array
    *   A keyed array of all static cookie consent data. The key is the vendor
-   *   machine name as  defined by the StaticConsentDataInterface::VENDOR_*
+   *   machine name as defined by the StaticConsentDataInterface::VENDOR_*
    *   constants, the value is a keyed array with the following items:
    *     - id: The vendor ID.
    *     - purposes: An array containing the IDs of all required purposes.
    *     - label: The human-readable label for the vendor.
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
   public function getAll();
 
@@ -79,6 +81,8 @@ interface StaticConsentDataInterface {
    *
    * @return int[]
    *   An array of purpose IDs on success, otherwise an empty array.
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
   public function getPurposeIds($vendor);
 
@@ -91,6 +95,8 @@ interface StaticConsentDataInterface {
    *
    * @return string[]
    *   The toggle button label on success, otherwise NULL.
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
   public function getToggleLabel($vendor);
 
@@ -103,6 +109,8 @@ interface StaticConsentDataInterface {
    *
    * @return int|null
    *   The vendor ID on success, otherwise NULL.
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
   public function getVendorId($vendor);
 
@@ -115,6 +123,8 @@ interface StaticConsentDataInterface {
    *
    * @return string[]
    *   The human-readable label on success, otherwise NULL.
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
   public function getVendorLabel($vendor);
 
@@ -127,6 +137,8 @@ interface StaticConsentDataInterface {
    * @return string|null
    *   The vendor name as defined by the StaticConsentDataInterface::VENDOR_*
    *   constants on success, otherwise NULL.
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
   public function getVendorName($vendor);
 
