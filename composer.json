@@ -8,5 +8,8 @@
     "branch-alias": {
       "dev-8.x-1.x": "1.x-dev"
     }
+  },
+  "require": {
+    "ext-dom": "*"
   }
 }
