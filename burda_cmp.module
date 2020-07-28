@@ -92,7 +92,7 @@ function burda_cmp_theme($existing, $type, $theme, $path) {
       'toggle_label' => NULL,
       'url_privacy_policy' => NULL,
       'vendor' => NULL,
-      'vendor_name' => NULL,
+      'vendor_label' => NULL,
     ],
     'file' => 'burda_cmp.theme.inc',
   ];
