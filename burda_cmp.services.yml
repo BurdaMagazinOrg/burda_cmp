@@ -1,0 +1,8 @@
+services:
+  burda_cmp.static_consent_data:
+    class: Drupal\burda_cmp\StaticConsentData
+  burda_cmp.twig.extension:
+    class: Drupal\burda_cmp\Template\TwigExtension
+    arguments: ['@burda_cmp.static_consent_data']
+    tags:
+      - { name: twig.extension }

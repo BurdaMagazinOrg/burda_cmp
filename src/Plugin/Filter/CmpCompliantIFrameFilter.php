@@ -2,6 +2,7 @@
 
 namespace Drupal\burda_cmp\Plugin\Filter;
 
+use Drupal\burda_cmp\StaticConsentDataInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -81,13 +82,7 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
 
         // Google Maps.
         if (preg_match('!google\.com\/maps\/embed!', $src)) {
-          $vendor = 10219;
-          // @todo Still needs correct purpose IDs for Google Maps.
-          $purposes = [];
-          $vendor_name = 'Google Maps';
-          $toggle_label = 'Google Maps anzeigen';
-
-          $this->replaceWithCmpCompliantDomNode($node, $vendor, $purposes, $vendor_name, $toggle_label);
+          $this->replaceWithCmpCompliantDomNode($node, StaticConsentDataInterface::VENDOR_GOOGLE_MAPS);
         }
 
         // @todo Support any other iFrames? If so, add conditions and processing
@@ -115,17 +110,23 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
    *
    * @param \DOMNode $node
    *   The DOM node to replace with a CMP compliant equivalent.
-   * @param int $vendor
-   *   The vendor ID.
+   * @param int|string $vendor
+   *   The vendor name as defined by the StaticConsentDataInterface::VENDOR_*
+   *   constants or a numeric vendor ID.
    * @param array $purposes
-   *   An array of consent purpose IDs.
-   * @param string $vendor_name
-   *   The human-readable vendor name.
+   *   An array of consent purpose IDs. Leave empty to use defaults defined in
+   *   static cookie consent data (if any).
+   * @param string $vendor_label
+   *   The human-readable vendor label. Leave empty to use default defined in
+   *   static cookie consent data (if any).
    * @param $toggle_label
-   *   The label used for the consent toggle button.
+   *   The label used for the consent toggle button. Leave empty to use default
+   *   defined in static cookie consent data (if any).
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
-  protected function replaceWithCmpCompliantDomNode(\DOMNode $node, $vendor, array $purposes, $vendor_name, $toggle_label) {
-    if (($node_compliant = $this->createCmpCompliantDomNode($node->ownerDocument->saveHTML($node), $vendor, $purposes, $vendor_name, $toggle_label))) {
+  protected function replaceWithCmpCompliantDomNode(\DOMNode $node, $vendor, array $purposes = [], $vendor_label = NULL, $toggle_label = NULL) {
+    if (($node_compliant = $this->createCmpCompliantDomNode($node->ownerDocument->saveHTML($node), $vendor, $purposes, $vendor_label, $toggle_label))) {
       try {
         $node_compliant = $node->ownerDocument->importNode($node_compliant, TRUE);
         $node->parentNode->replaceChild($node_compliant, $node);
@@ -141,25 +142,30 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
    *
    * @param string $content
    *   The content to be CMP compliant.
-   * @param int $vendor
-   *   The vendor ID.
+   * @param int|string $vendor
+   *   The vendor name as defined by the StaticConsentDataInterface::VENDOR_*
+   *   constants or a numeric vendor ID.
    * @param array $purposes
-   *   An array of consent purpose IDs.
-   * @param string $vendor_name
-   *   The human-readable vendor name.
+   *   An array of consent purpose IDs. Leave empty to use defaults defined in
+   *   static cookie consent data (if any).
+   *   The human-readable vendor label. Leave empty to use default defined in
+   *   static cookie consent data (if any).
    * @param $toggle_label
-   *   The label used for the consent toggle button.
+   *   The label used for the consent toggle button. Leave empty to use default
+   *   defined in static cookie consent data (if any).
    *
    * @return \DOMNode|null
    *   Returns the CMP compliant DOM node on success, otherwise NULL.
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
-  protected function createCmpCompliantDomNode($content, $vendor, array $purposes, $vendor_name, $toggle_label) {
+  protected function createCmpCompliantDomNode($content, $vendor, array $purposes = [], $vendor_label = NULL, $toggle_label = NULL) {
     $conditional_element = [
       '#theme' => 'burda_cmp_conditional_content',
       '#content' => $content,
       '#vendor' => $vendor,
       '#purposes' => $purposes,
-      '#vendor_name' => $vendor_name,
+      '#vendor_label' => $vendor_label,
       '#toggle_label' => $toggle_label,
     ];
 
