@@ -122,6 +122,8 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
    * @param $toggle_label
    *   The label used for the consent toggle button. Leave empty to use default
    *   defined in static cookie consent data (if any).
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
   protected function replaceWithCmpCompliantDomNode(\DOMNode $node, $vendor, array $purposes = [], $vendor_label = NULL, $toggle_label = NULL) {
     if (($node_compliant = $this->createCmpCompliantDomNode($node->ownerDocument->saveHTML($node), $vendor, $purposes, $vendor_label, $toggle_label))) {
@@ -154,6 +156,8 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
    *
    * @return \DOMNode|null
    *   Returns the CMP compliant DOM node on success, otherwise NULL.
+   *
+   * @see \Drupal\burda_cmp\StaticConsentDataInterface
    */
   protected function createCmpCompliantDomNode($content, $vendor, array $purposes = [], $vendor_label = NULL, $toggle_label = NULL) {
     $conditional_element = [
