@@ -85,6 +85,11 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
           $this->replaceWithCmpCompliantDomNode($node, StaticConsentDataInterface::VENDOR_GOOGLE_MAPS);
         }
 
+        // Allow privacy policy iFrames.
+        elseif (preg_match('!cdn\.datenschutz\.!', $src) && preg_match('!burda\.com!', $src)) {
+          continue;
+        }
+
         // @todo Support any other iFrames? If so, add conditions and processing
         //   logic here.
 
