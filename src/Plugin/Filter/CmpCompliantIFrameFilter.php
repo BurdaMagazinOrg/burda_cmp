@@ -90,6 +90,11 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
           continue;
         }
 
+        // Allow LeadGen iFrames.
+        elseif (preg_match('!leadgen\.sso\-service\.de!', $src)) {
+          continue;
+        }
+
         // @todo Support any other iFrames? If so, add conditions and processing
         //   logic here.
 
