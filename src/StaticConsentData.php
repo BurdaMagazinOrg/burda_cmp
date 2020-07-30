@@ -107,8 +107,10 @@ class StaticConsentData implements StaticConsentDataInterface {
           'label' => $this->t('Vimeo', [], ['context' => 'Cookie consent provider']),
           // @todo Toggle label should be translatable for Vimeo videos.
           'toggle_label' => 'Vimeo-Videos anzeigen',
-          // @todo Still needs correct purpose IDs for Vimeo.
-          'purposes' => [],
+          'purposes' => [
+            26,
+            29,
+          ],
         ],
 
         // Xandr, Inc.
