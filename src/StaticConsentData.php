@@ -41,8 +41,9 @@ class StaticConsentData implements StaticConsentDataInterface {
           'label' => $this->t('Google Maps', [], ['context' => 'Cookie consent provider']),
           // @todo Toggle label should be translatable for Google Maps.
           'toggle_label' => 'Google Maps anzeigen',
-          // @todo Still needs correct purpose IDs for Google Maps.
-          'purposes' => [],
+          'purposes' => [
+            29,
+          ],
         ],
 
         // Instagram.
