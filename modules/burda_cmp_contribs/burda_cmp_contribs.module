@@ -50,8 +50,7 @@ function _bnp_cmp_contribs_adjust() {
   $adjust = [
     'riddle_marketplace' => [
       '*' => [
-        'vendor' => 10196,
-        'purposes' => [1,2,3,4,5,6,7,8,9,10,25,26,27,28,29,30]
+        'vendor' => StaticConsentDataInterface::VENDOR_RIDDLE,
       ],
     ],
     'media_entity_pinterest' => [
