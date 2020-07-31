@@ -50,8 +50,19 @@ class StaticConsentData implements StaticConsentDataInterface {
         static::VENDOR_INSTAGRAM => [
           'id' => 10019,
           'label' => $this->t('Instagram', [], ['context' => 'Cookie consent provider']),
-          // @todo Toggle label should be translatable for Facebook posts.
+          // @todo Toggle label should be translatable for Instagram posts.
           'toggle_label' => 'Instagram-Posts anzeigen',
+          'purposes' => [
+            29,
+          ],
+        ],
+
+        // Pinterest.
+        static::VENDOR_PINTEREST => [
+          'id' => 10031,
+          'label' => $this->t('Pinterest', [], ['context' => 'Cookie consent provider']),
+          // @todo Toggle label should be translatable for Pinterest posts.
+          'toggle_label' => 'Pinterest-Posts anzeigen',
           'purposes' => [
             29,
           ],
