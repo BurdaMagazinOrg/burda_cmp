@@ -23,6 +23,11 @@ interface StaticConsentDataInterface {
   const VENDOR_INSTAGRAM = 'instagram';
 
   /**
+   * Vendor name: Pinterest.
+   */
+  const VENDOR_PINTEREST = 'pinterest';
+
+  /**
    * Vendor name: Retyp LLC (OptinMonster).
    */
   const VENDOR_RETYP_LLC = 'retyp_llc';

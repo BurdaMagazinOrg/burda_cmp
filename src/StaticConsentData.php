@@ -57,6 +57,17 @@ class StaticConsentData implements StaticConsentDataInterface {
           ],
         ],
 
+        // Pinterest.
+        static::VENDOR_PINTEREST => [
+          'id' => 10031,
+          'label' => $this->t('Pinterest', [], ['context' => 'Cookie consent provider']),
+          // @todo Toggle label should be translatable for Pinterest posts.
+          'toggle_label' => 'Pinterest-Posts anzeigen',
+          'purposes' => [
+            29,
+          ],
+        ],
+
         // Retyp LLC (OptinMonster).
         static::VENDOR_RETYP_LLC => [
           'id' => 10195,
