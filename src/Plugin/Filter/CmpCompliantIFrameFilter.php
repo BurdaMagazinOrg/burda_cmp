@@ -95,6 +95,11 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
           continue;
         }
 
+        // Allow Biallo iFrames.
+        elseif (preg_match('!koop\.biallo\.de!', $src)) {
+          continue;
+        }
+
         // @todo Support any other iFrames? If so, add conditions and processing
         //   logic here.
 
