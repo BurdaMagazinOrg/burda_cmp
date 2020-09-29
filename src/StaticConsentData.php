@@ -42,7 +42,7 @@ class StaticConsentData implements StaticConsentDataInterface {
           // @todo Toggle label should be translatable for Google Maps.
           'toggle_label' => 'Google Maps anzeigen',
           'purposes' => [
-            29,
+            26,
           ],
         ],
 
