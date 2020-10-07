@@ -99,6 +99,9 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
         elseif (preg_match('!koop\.biallo\.de!', $src)) {
           continue;
         }
+        elseif (preg_match('!geldsparen\.de!', $src)) {
+          continue;
+        }
 
         // @todo Support any other iFrames? If so, add conditions and processing
         //   logic here.
