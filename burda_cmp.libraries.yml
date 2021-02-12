@@ -16,6 +16,15 @@ liveramp.conditional-scripts:
     - core/drupalSettings
     - core/jquery
 
+liveramp.disable-privacy-manager:
+  version: VERSION
+  js:
+    js/liveramp/burda-cmp.liveramp.disable-privacy-manager.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+
 liveramp.open-privacy-manager:
   version: VERSION
   js:

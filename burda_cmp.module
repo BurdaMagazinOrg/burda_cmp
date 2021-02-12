@@ -79,6 +79,7 @@ function burda_cmp_page_attachments(array &$page) {
 
   // LiveRamp init script.
   if ($liveramp_script_url) {
+    $page['#attached']['library'][] = 'burda_cmp/liveramp.disable-privacy-manager';
     $page['#attached']['html_head'][] = [
       [
         '#tag' => 'script',
