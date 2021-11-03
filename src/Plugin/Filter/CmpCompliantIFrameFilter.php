@@ -103,6 +103,10 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
           continue;
         }
 
+        elseif (preg_match('!sliders\.homeday\.de!', $src)) {
+          continue;
+        }
+
         // @todo Support any other iFrames? If so, add conditions and processing
         //   logic here.
 
