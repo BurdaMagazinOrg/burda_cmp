@@ -107,6 +107,11 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
           continue;
         }
 
+        // Allow Burda CDN LeadGen iFrames.
+        elseif (preg_match('!cdn\.leadgen\.burda\.com!', $src)) {
+          continue;
+        }
+
         // @todo Support any other iFrames? If so, add conditions and processing
         //   logic here.
 
