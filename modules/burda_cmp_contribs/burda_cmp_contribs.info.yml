@@ -1,7 +1,7 @@
 name: CMP complicance for contrib extensions
 type: module
 description: Contains adjustments for CMP compliant usage of selected contrib extensions.
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: Burda
 dependencies:
   burda_cmp:burda_cmp
