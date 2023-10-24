@@ -3,13 +3,15 @@
 namespace Drupal\burda_cmp\Template;
 
 use Drupal\burda_cmp\StaticConsentDataInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * A class providing Drupal Twig extensions for burda_cmp module.
  *
  * @see \Drupal\Core\CoreServiceProvider
  */
-class TwigExtension extends \Twig_Extension {
+class TwigExtension extends AbstractExtension {
 
   /**
    * The static cookie consent data service.
@@ -40,8 +42,8 @@ class TwigExtension extends \Twig_Extension {
    */
   public function getFunctions() {
     return [
-      new \Twig_SimpleFunction('burda_cmp_purpose_ids', [$this, 'cmpPurposeIds']),
-      new \Twig_SimpleFunction('burda_cmp_vendor_id', [$this, 'cmpVendorId']),
+      new TwigFunction('burda_cmp_purpose_ids', [$this, 'cmpPurposeIds']),
+      new TwigFunction('burda_cmp_vendor_id', [$this, 'cmpVendorId']),
     ];
   }
 

@@ -1,5 +1,5 @@
 name: Consent management platform
 type: module
 description: Contains custom code for the consent management platform implementation via LiveRamp.
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: Burda
