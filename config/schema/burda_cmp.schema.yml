@@ -1,6 +1,6 @@
-block.settings.burda_cmp_liveramp_open_privacy_manager:*:
+block.settings.burda_cmp_sourcepoint_open_privacy_manager:*:
   type: block_settings
-  label: 'Open privacy manager block (LiveRamp)'
+  label: 'Open privacy manager block (Sourcepoint)'
   mapping:
     link_text:
       type: label
@@ -10,6 +10,6 @@ burda_cmp.settings:
   type: config_object
   label: 'Consent management platform settings'
   mapping:
-    liveramp_script_url:
+    sourcepoint_script_url:
       type: string
-      label: 'LiveRamp script URL'
+      label: 'Sourcepoint script URL'

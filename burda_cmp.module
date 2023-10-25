@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_module_implements_alter().
@@ -71,24 +72,57 @@ function burda_cmp_library_info_alter(&$libraries, $extension) {
 function burda_cmp_page_attachments(array &$page) {
   /** @var \Drupal\Core\Config\ImmutableConfig $config */
   $config = \Drupal::config('burda_cmp.settings');
-  $liveramp_script_url = $config->get('liveramp_script_url');
+  $sourcepoint_script_url = $config->get('sourcepoint_script_url');
+  $sourcepoint_shim_script = $config->get('sourcepoint_shim_script');
+  $sourcepoint_config_code = $config->get('sourcepoint_config_code');
 
   CacheableMetadata::createFromRenderArray($page)
     ->addCacheableDependency($config)
     ->applyTo($page);
 
-  // LiveRamp init script.
-  if ($liveramp_script_url) {
+  if ($sourcepoint_shim_script) {
     $page['#attached']['html_head'][] = [
       [
         '#tag' => 'script',
         '#attributes' => [
           'type' => 'text/javascript',
-          'src' => $liveramp_script_url,
+          'data-sourcepoint' => 'shim-script'
+        ],
+        '#weight' => -102,
+        '#value' => Markup::create($sourcepoint_shim_script)
+      ],
+      'burda_cmp_init_shim',
+    ];
+  }
+
+  if ($sourcepoint_config_code) {
+    $page['#attached']['html_head'][] = [
+      [
+        '#type' => 'html_tag',
+        '#tag' => 'script',
+        '#attributes' => [
+          'type' => 'text/javascript',
+          'data-sourcepoint' => 'config-code'
+        ],
+        '#weight' => -101,
+        '#value' => Markup::create($sourcepoint_config_code)
+      ],
+      'burda_cmp_init_config',
+    ];
+  }
+
+  if ($sourcepoint_script_url) {
+    $page['#attached']['html_head'][] = [
+      [
+        '#tag' => 'script',
+        '#attributes' => [
+          'type' => 'text/javascript',
+          'src' => $sourcepoint_script_url,
+          'data-sourcepoint' => 'script-url'
         ],
         '#weight' => -100,
       ],
-      'burda_cmp_init',
+      'burda_cmp_init_script',
     ];
   }
 }
