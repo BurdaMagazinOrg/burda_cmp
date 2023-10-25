@@ -6,11 +6,11 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Provides an 'Open privacy manager' link block for LiveRamp integration.
+ * Provides an 'Open privacy manager' link block for Sourcepoint integration.
  *
  * @Block(
- *   id = "burda_cmp_liveramp_open_privacy_manager",
- *   admin_label = @Translation("Open privacy manager (LiveRamp)"),
+ *   id = "burda_cmp_sourcepoint_open_privacy_manager",
+ *   admin_label = @Translation("Open privacy manager (Sourcepoint)"),
  * )
  */
 class OpenPrivacyManagerBlock extends BlockBase {
@@ -37,7 +37,7 @@ class OpenPrivacyManagerBlock extends BlockBase {
         ],
         '#attached' => [
           'library' => [
-            'burda_cmp/liveramp.open-privacy-manager',
+            'burda_cmp/sourcepoint.open-privacy-manager',
           ],
         ],
       ],

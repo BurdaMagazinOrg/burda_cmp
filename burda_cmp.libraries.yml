@@ -23,3 +23,11 @@ liveramp.open-privacy-manager:
   dependencies:
     - core/drupal
     - core/jquery
+
+sourcepoint.open-privacy-manager:
+  js:
+    js/sourcepoint/burda-cmp.sourcepoint.open-privacy-manager.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
