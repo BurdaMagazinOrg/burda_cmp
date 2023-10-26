@@ -207,14 +207,8 @@ class StaticConsentData implements StaticConsentDataInterface {
 
     $purposes = $data[$vendor]['purposes'] ?? [];
 
-    // Ensure legitimate interest purpose.
-    $purposes[] = 1;
-
     // Filter duplicates.
     $purposes = array_unique($purposes);
-
-    // Sort purposes.
-    sort($purposes);
 
     return $purposes;
   }
