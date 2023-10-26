@@ -16,7 +16,7 @@
               e.preventDefault();
               e.stopPropagation();
               // Open privacy manager.
-              window._sp_.gdpr.loadPrivacyManagerModal(883404); // @TODO PM ID == Correct Privacy Manager Id?
+              window._sp_.gdpr.loadPrivacyManagerModal(818834);
             });
           });
         }
