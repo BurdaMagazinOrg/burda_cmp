@@ -28,16 +28,6 @@ interface StaticConsentDataInterface {
   const VENDOR_PINTEREST = 'pinterest';
 
   /**
-   * Vendor name: Retyp LLC (OptinMonster).
-   */
-  const VENDOR_RETYP_LLC = 'retyp_llc';
-
-  /**
-   * Vendor name: Riddle.
-   */
-  const VENDOR_RIDDLE = 'riddle';
-
-  /**
    * Vendor name: TargetVideo GmbH.
    */
   const VENDOR_TARGETVIDEO_GMBH = 'targetvideo_gmbh';

@@ -48,11 +48,6 @@ function burda_cmp_contribs_library_info_alter(&$libraries, $extension) {
  */
 function _bnp_cmp_contribs_adjust() {
   $adjust = [
-    'riddle_marketplace' => [
-      '*' => [
-        'vendor' => StaticConsentDataInterface::VENDOR_RIDDLE,
-      ],
-    ],
     'media_entity_pinterest' => [
       'pinterest.widgets' => [
         'vendor' => StaticConsentDataInterface::VENDOR_PINTEREST,

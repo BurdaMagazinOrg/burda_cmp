@@ -75,26 +75,6 @@ class StaticConsentData implements StaticConsentDataInterface {
           ],
         ],
 
-//        // Retyp LLC (OptinMonster).
-//        static::VENDOR_RETYP_LLC => [
-//          // @TODO: Missing in Sourcepoint..
-//          'id' => 10195,
-//          'label' => $this->t('Retyp LLC', [], ['context' => 'Cookie consent provider']),
-//          // @todo Toggle label for Retyp LLC / OptinMonster (if needed).
-//          'toggle_label' => NULL,
-//          'purposes' => [],
-//        ],
-//
-//        // Riddle Technologies AG.
-//        static::VENDOR_RIDDLE => [
-//          // @TODO: Missing in Sourcepoint..
-//          'id' => 10196,
-//          'label' => $this->t('Riddle Technologies AG', [], ['context' => 'Cookie consent provider']),
-//          // @todo Toggle label should be translatable for Riddle polls.
-//          'toggle_label' => 'Riddle-Umfragen anzeigen',
-//          'purposes' => [],
-//        ],
-
         // TargetVideo GmbH.
         static::VENDOR_TARGETVIDEO_GMBH => [
           'id' => '5f0838a5b8e05c065164a384',
@@ -108,7 +88,7 @@ class StaticConsentData implements StaticConsentDataInterface {
 
         // Twitter. / X Corp.
         static::VENDOR_TWITTER => [
-          'id' => '5e71760b69966540e4554f01',
+          'id' => '5fab0c31a22863611c5f8764',
           'label' => $this->t('Twitter', [], ['context' => 'Cookie consent provider']),
           // @todo Toggle label should be translatable for Twitter posts.
           'toggle_label' => 'Twitter-Posts anzeigen',
