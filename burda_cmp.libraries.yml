@@ -38,5 +38,6 @@ sourcepoint.open-privacy-manager:
     js/sourcepoint/burda-cmp.sourcepoint.open-privacy-manager.js: {}
   dependencies:
     - core/drupal
+    - core/drupalSettings
     - core/jquery
     - core/once

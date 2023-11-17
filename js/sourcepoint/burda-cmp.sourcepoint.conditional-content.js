@@ -220,7 +220,7 @@
      *   A jQuery DOM fragment that represents the conditional content element.
      */
     showConsentManager: function showConsentManager($element) {
-      window._sp_.gdpr.loadPrivacyManagerModal(893032);
+      window._sp_.gdpr.loadPrivacyManagerModal(drupalSettings.burdaCmp.privacyManagerId);
     },
 
     /**

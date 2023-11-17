@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\burda_cmp\Plugin\Block\LiveRamp;
+namespace Drupal\burda_cmp\Plugin\Block\Sourcepoint;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -26,6 +26,7 @@ class OpenPrivacyManagerBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    $privacyManagerId = \Drupal::config('burda_cmp.settings')->get('privacy_manager_id');
     $build = [
       'link' => [
         '#type' => 'html_tag',
@@ -39,6 +40,11 @@ class OpenPrivacyManagerBlock extends BlockBase {
           'library' => [
             'burda_cmp/sourcepoint.open-privacy-manager',
           ],
+          'drupalSettings' => [
+            'burdaCmp' => [
+              'privacyManagerId' => $privacyManagerId,
+            ],
+          ],
         ],
       ],
     ];
@@ -49,14 +55,18 @@ class OpenPrivacyManagerBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $form['link_text'] = [
       '#title' => $this->t('Link text'),
-      '#description' => $this->t('The text of the link (defaults to %link_text)', [
-        '%link_text' => $this->t('Open privacy manager'),
-      ]),
+      '#description' => $this->t('The text of the link (defaults to %link_text)',
+        [
+          '%link_text' => $this->t('Open privacy manager'),
+        ]),
       '#type' => 'textfield',
       '#default_value' => $this->configuration['link_text'],
     ];
