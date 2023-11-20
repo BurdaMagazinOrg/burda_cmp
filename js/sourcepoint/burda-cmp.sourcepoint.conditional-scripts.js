@@ -7,13 +7,6 @@
   'use strict';
 
   /**
-   * Array bag for all loaded scripts.
-   *
-   * @type {Array}
-   */
-  var alreadyLoaded = [];
-
-  /**
    * Enables the 'Conditional scripts' functionality.
    *
    * @type {Drupal~behavior}
