@@ -1,29 +1,3 @@
-liveramp.conditional-content:
-  version: VERSION
-  js:
-    js/liveramp/burda-cmp.liveramp.conditional-content.js: { }
-  dependencies:
-    - core/drupal
-    - core/drupalSettings
-    - core/jquery
-
-liveramp.conditional-scripts:
-  version: VERSION
-  js:
-    js/liveramp/burda-cmp.liveramp.conditional-scripts.js: { }
-  dependencies:
-    - core/drupal
-    - core/drupalSettings
-    - core/jquery
-
-liveramp.open-privacy-manager:
-  version: VERSION
-  js:
-    js/liveramp/burda-cmp.liveramp.open-privacy-manager.js: { }
-  dependencies:
-    - core/drupal
-    - core/jquery
-
 sourcepoint.conditional-content:
   version: VERSION
   js:
