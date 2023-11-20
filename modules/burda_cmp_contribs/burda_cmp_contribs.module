@@ -28,8 +28,39 @@ function burda_cmp_contribs_library_info_alter(&$libraries, $extension) {
         }
 
         foreach ($library_definition['js'] as &$js_definition) {
-          $js_definition['burda_cmp'] = $adjustment;
+          if ($adjustment) {
+            $js_definition['burda_cmp'] = $adjustment;
+          }
         }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function burda_cmp_contribs_page_attachments_alter(array &$attachments) {
+  // Set Google Analytics and Tag Manager.
+  $vendorAdjust = _contribs_attachments_adjust();
+  foreach ($attachments['#attached']['html_head'] as &$lib) {
+    if (isset($lib[1])) {
+      $vendor = $lib[1];
+      $script = &$lib[0];
+      if (array_key_exists($vendor, $vendorAdjust)) {
+        if (!in_array('burda_cmp/sourcepoint.conditional-scripts',
+          $attachments['#attached']['library'])) {
+          $attachments['#attached']['library'][] = 'burda_cmp/sourcepoint.conditional-scripts';
+        }
+        if (!isset($script['#attributes'])) {
+          $script['#attributes'] = [];
+        }
+        $script['#attributes']['type'] = 'text/plain';
+        $script['#attributes']['data-burda-cmp-conditional-scripts'] = '';
+        $script['#attributes']['data-burda-cmp-vendor'] = $vendorAdjust[$vendor]['vendorName'];
+        $script['#attributes']['data-burda-cmp-vendorId'] = $vendorAdjust[$vendor]['vendorId'];
+        $script['#attributes']['data-burda-cmp-purposeIds'] = implode(',',
+          $vendorAdjust[$vendor]['purposeIds']);
       }
     }
   }
@@ -56,4 +87,16 @@ function _bnp_cmp_contribs_adjust() {
   ];
 
   return $adjust;
+}
+
+function _contribs_attachments_adjust() {
+  /** @var \Drupal\burda_cmp\StaticConsentDataInterface $static_consent_data */
+  $static_consent_data = \Drupal::service('burda_cmp.static_consent_data');
+  return [
+    'google_tag_script_tag__primary' => [
+      'vendorName' => $static_consent_data::VENDOR_GOOGLE_ANALYTICS,
+      'vendorId' => $static_consent_data->getVendorId($static_consent_data::VENDOR_GOOGLE_ANALYTICS),
+      'purposeIds' => $static_consent_data->getPurposeIds($static_consent_data::VENDOR_GOOGLE_ANALYTICS),
+    ],
+  ];
 }

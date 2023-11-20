@@ -49,6 +49,18 @@ class StaticConsentData implements StaticConsentDataInterface {
           ],
         ],
 
+        // Google Analytics.
+        static::VENDOR_GOOGLE_ANALYTICS => [
+          'id' => '5e542b3a4cd8884eb41b5a72',
+          'label' => $this->t('Google Analytics', [], ['context' => 'Cookie consent provider']),
+          // @todo Toggle label should be translatable for Google Maps.
+          'toggle_label' => 'Google Analytics nutzen',
+          'purposes' => [
+            static::PURPOSE_STORE_AND_OR_ACCESS_INFORMATION_ON_A_DEVICE,
+            static::PURPOSE_ANALYTIC,
+          ],
+        ],
+
         // Instagram.
         static::VENDOR_INSTAGRAM => [
           'id' => '6054c53ca228639c6f285121',

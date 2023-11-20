@@ -1,7 +1,7 @@
 liveramp.conditional-content:
   version: VERSION
   js:
-    js/liveramp/burda-cmp.liveramp.conditional-content.js: {}
+    js/liveramp/burda-cmp.liveramp.conditional-content.js: { }
   dependencies:
     - core/drupal
     - core/drupalSettings
@@ -10,7 +10,7 @@ liveramp.conditional-content:
 liveramp.conditional-scripts:
   version: VERSION
   js:
-    js/liveramp/burda-cmp.liveramp.conditional-scripts.js: {}
+    js/liveramp/burda-cmp.liveramp.conditional-scripts.js: { }
   dependencies:
     - core/drupal
     - core/drupalSettings
@@ -19,7 +19,7 @@ liveramp.conditional-scripts:
 liveramp.open-privacy-manager:
   version: VERSION
   js:
-    js/liveramp/burda-cmp.liveramp.open-privacy-manager.js: {}
+    js/liveramp/burda-cmp.liveramp.open-privacy-manager.js: { }
   dependencies:
     - core/drupal
     - core/jquery
@@ -27,15 +27,26 @@ liveramp.open-privacy-manager:
 sourcepoint.conditional-content:
   version: VERSION
   js:
-    js/sourcepoint/burda-cmp.sourcepoint.conditional-content.js: {}
+    js/sourcepoint/burda-cmp.sourcepoint.conditional-content.js: { }
   dependencies:
     - core/drupal
     - core/drupalSettings
     - core/jquery
+    - core/once
+
+sourcepoint.conditional-scripts:
+  version: VERSION
+  js:
+    js/sourcepoint/burda-cmp.sourcepoint.conditional-scripts.js: { }
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - core/once
 
 sourcepoint.open-privacy-manager:
   js:
-    js/sourcepoint/burda-cmp.sourcepoint.open-privacy-manager.js: {}
+    js/sourcepoint/burda-cmp.sourcepoint.open-privacy-manager.js: { }
   dependencies:
     - core/drupal
     - core/drupalSettings

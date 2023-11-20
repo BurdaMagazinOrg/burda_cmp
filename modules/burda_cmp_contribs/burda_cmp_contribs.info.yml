@@ -4,4 +4,4 @@ description: Contains adjustments for CMP compliant usage of selected contrib ex
 core_version_requirement: ^9 || ^10
 package: Burda
 dependencies:
-  burda_cmp:burda_cmp
+  - burda_cmp:burda_cmp

@@ -18,6 +18,11 @@ interface StaticConsentDataInterface {
   const VENDOR_GOOGLE_MAPS = 'google_maps';
 
   /**
+   * Vendor name: Google Analytics.
+   */
+  const VENDOR_GOOGLE_ANALYTICS = 'google_analytics';
+
+  /**
    * Vendor name: Instagram.
    */
   const VENDOR_INSTAGRAM = 'instagram';
