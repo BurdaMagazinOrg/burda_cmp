@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_module_implements_alter().
@@ -38,27 +39,30 @@ function burda_cmp_library_info_alter(&$libraries, $extension) {
     if (!empty($library['js'])) {
       foreach ($library['js'] as $js => &$definition) {
         if (isset($definition['burda_cmp'])) {
-          $parsed = _burda_cmp_parse_js_definition($js, $extension, $definition);
-
           // Ensure numeric vendor ID.
           if (!empty($definition['burda_cmp']['vendor'])) {
-            if (!is_numeric($definition['burda_cmp']['vendor'])) {
-              $definition['burda_cmp']['vendor'] = $static_consent_data->getVendorId($definition['burda_cmp']['vendor']);
-            }
+            $definition['burda_cmp']['vendorId'] = $static_consent_data->getVendorId($definition['burda_cmp']['vendor']);
           }
 
           // Determine purposes by vendor (if empty).
           if (!empty($definition['burda_cmp']['vendor'])) {
             if (empty($definition['burda_cmp']['purposes'])) {
-              $definition['burda_cmp']['purposes'] = $static_consent_data->getPurposeIds($definition['burda_cmp']['vendor']);
+              $definition['burda_cmp']['purposeIds'] = $static_consent_data->getPurposeIds($definition['burda_cmp']['vendor']);
             }
           }
 
-          $script = \Drupal::service('file_url_generator')->generateString($parsed['data']);
-          $library['drupalSettings']['burdaCmp'][$extension][$script] = $definition['burda_cmp'];
-
-          // Remove definition as it is loaded on demand now.
-          unset($library['js'][$js]);
+          if (!empty($definition['burda_cmp']['vendor'])) {
+            // Overwrite attribute text/javascript to text/plain
+            if (!isset($definition['attributes'])) {
+              $definition['attributes'] = [];
+            }
+            $definition['attributes']['type'] = 'text/plain';
+            $definition['attributes']['data-burda-cmp-conditional-scripts'] = '';
+            $definition['attributes']['data-burda-cmp-vendor'] = $definition['burda_cmp']['vendor'];
+            $definition['attributes']['data-burda-cmp-vendorId'] = $static_consent_data->getVendorId($definition['burda_cmp']['vendor']);
+            $definition['attributes']['data-burda-cmp-purposeIds'] = implode(',',
+              $static_consent_data->getPurposeIds($definition['burda_cmp']['vendor']));
+          }
         }
       }
     }
@@ -71,24 +75,57 @@ function burda_cmp_library_info_alter(&$libraries, $extension) {
 function burda_cmp_page_attachments(array &$page) {
   /** @var \Drupal\Core\Config\ImmutableConfig $config */
   $config = \Drupal::config('burda_cmp.settings');
-  $liveramp_script_url = $config->get('liveramp_script_url');
+  $sourcepoint_script_url = $config->get('sourcepoint_script_url');
+  $sourcepoint_shim_script = $config->get('sourcepoint_shim_script');
+  $sourcepoint_config_code = $config->get('sourcepoint_config_code');
 
   CacheableMetadata::createFromRenderArray($page)
     ->addCacheableDependency($config)
     ->applyTo($page);
 
-  // LiveRamp init script.
-  if ($liveramp_script_url) {
+  if ($sourcepoint_shim_script) {
     $page['#attached']['html_head'][] = [
       [
         '#tag' => 'script',
         '#attributes' => [
           'type' => 'text/javascript',
-          'src' => $liveramp_script_url,
+          'data-sourcepoint' => 'shim-script',
+        ],
+        '#weight' => -102,
+        '#value' => Markup::create($sourcepoint_shim_script),
+      ],
+      'burda_cmp_init_shim',
+    ];
+  }
+
+  if ($sourcepoint_config_code) {
+    $page['#attached']['html_head'][] = [
+      [
+        '#type' => 'html_tag',
+        '#tag' => 'script',
+        '#attributes' => [
+          'type' => 'text/javascript',
+          'data-sourcepoint' => 'config-code',
+        ],
+        '#weight' => -101,
+        '#value' => Markup::create($sourcepoint_config_code),
+      ],
+      'burda_cmp_init_config',
+    ];
+  }
+
+  if ($sourcepoint_script_url) {
+    $page['#attached']['html_head'][] = [
+      [
+        '#tag' => 'script',
+        '#attributes' => [
+          'type' => 'text/javascript',
+          'src' => $sourcepoint_script_url,
+          'data-sourcepoint' => 'script-url',
         ],
         '#weight' => -100,
       ],
-      'burda_cmp_init',
+      'burda_cmp_init_script',
     ];
   }
 }
@@ -115,77 +152,4 @@ function burda_cmp_theme($existing, $type, $theme, $path) {
   ];
 
   return $items;
-}
-
-/**
- * Parse a library's JavaScript definition.
- *
- * This is a verbatim copy of LibraryDiscoveryParser::buildByExtension() to have
- * the same logic for when the $options['data'] array item is set.
- *
- * @param string $source
- *   The script file path/URI.
- * @param string $extension
- *   The name of the extension that registered a library.
- * @param array $options
- *   The definition options for the JavaScript file.
- *
- * @see \Drupal\Core\Asset\LibraryDiscoveryParser::buildByExtension()
- */
-function _burda_cmp_parse_js_definition($source, $extension, array $options) {
-  if ($extension === 'core') {
-    $path = 'core';
-  }
-  else {
-    if (\Drupal::moduleHandler()->moduleExists($extension)) {
-      $extension_type = 'module';
-    }
-    else {
-      $extension_type = 'theme';
-    }
-    $path = \Drupal::service('extension.path.resolver')->getPath($extension_type, $extension);
-  }
-
-  if (!empty($options['type']) && $options['type'] === 'external') {
-    $options['data'] = $source;
-  }
-
-  // Determine the file asset URI.
-  else {
-    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
-    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-
-    if ($source[0] === '/') {
-      // An absolute path maps to DRUPAL_ROOT / base_path().
-      if ($source[1] !== '/') {
-        $options['data'] = substr($source, 1);
-      }
-
-      // A protocol-free URI (e.g., //cdn.com/example.js) is external.
-      else {
-        $options['type'] = 'external';
-        $options['data'] = $source;
-      }
-    }
-
-    // A stream wrapper URI (e.g., public://generated_js/example.js).
-    elseif ($stream_wrapper_manager->isValidUri($source)) {
-      $options['data'] = $source;
-    }
-
-    // A regular URI (e.g., http://example.com/example.js) without
-    // 'external' explicitly specified, which may happen if, e.g.
-    // libraries-override is used.
-    elseif (count(explode('://', $source)) === 2) {
-      $options['type'] = 'external';
-      $options['data'] = $source;
-    }
-
-    // By default, file paths are relative to the registering extension.
-    else {
-      $options['data'] = $path . '/' . $source;
-    }
-  }
-
-  return $options;
 }

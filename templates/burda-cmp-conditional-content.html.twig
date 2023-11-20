@@ -1,5 +1,5 @@
 {%- if content is not empty and vendor is not empty -%}
-  {{- attach_library('burda_cmp/liveramp.conditional-content') -}}
+  {{- attach_library('burda_cmp/sourcepoint.conditional-content') -}}
 
   <div class="burda-cmp-conditional-content" data-burda-cmp-conditional-content="{{ content|e('html_attr') }}" data-burda-cmp-vendor="{{- vendor|e('html_attr') -}}"{% if purposes is not empty %} data-burda-cmp-purposes="{{ purposes|join(',')|e('html_attr') -}}"{% endif %} aria-expanded="false">
     <div class="burda-cmp-conditional-content__content">

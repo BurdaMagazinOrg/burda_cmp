@@ -2,7 +2,7 @@
  * Conditional behavior for content that is only loaded when consent is given.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function (Drupal, $, once, drupalSettings) {
 
   'use strict';
 
@@ -14,34 +14,39 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Attaches the 'Conditional content' behavior.
    */
-  Drupal.behaviors.burdaCmpLiveRampConditionalContent = {
+  Drupal.behaviors.burdaCmpSourcepointConditionalContent = {
     attach: function attach(context) {
       var self = this;
 
       // Initialize when CMP library is ready.
-      __tcfapi('addEventListener', null, function () {
-        $('[data-burda-cmp-conditional-content]', context).once('burdaCmpLiveRampConditionalContent').each(function () {
+      __tcfapi('addEventListener', 2, function (tcData, success) {
+        $('[data-burda-cmp-conditional-content]', context).once('burdaCmpSourcepointConditionalContent').each(function () {
           var $self = $(this);
-
           self.checkConsent($self);
 
           // Initialize toggle (if any).
-          $self.find('[data-burda-cmp-toggle]').on('click.burdaCmpLiveRampConditionalContent', function (e) {
+          $self.find('[data-burda-cmp-toggle]').on('click.burdaCmpSourcepointConditionalContent', function (e) {
             e.preventDefault();
             e.stopPropagation();
-
             self.toggleConsent($self);
           });
 
           // Initialize settings button (if any).
-          $self.find('[data-burda-cmp-show-consent-manager]').on('click.burdaCmpLiveRampConditionalContent', function (e) {
+          $self.find('[data-burda-cmp-show-consent-manager]').on('click.burdaCmpSourcepointConditionalContent', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
             self.showConsentManager($self);
           });
         });
-      }, 'cmpReady');
+        // In case user initially confirms CMP on this page.
+        if (success && tcData.eventStatus === 'useractioncomplete') {
+          $('[data-burda-cmp-conditional-content]').each(function () {
+            var $self = $(this);
+            self.checkConsent($self);
+          });
+        }
+      });
     },
 
     /**
@@ -50,34 +55,46 @@
      * @param {jQuery} $element
      *   A jQuery DOM fragment that represents the conditional content element.
      */
-    checkConsent: function($element) {
+    checkConsent: function ($element) {
       var self = this;
       var $placeholder = self.getWrapperPlaceholder($element);
       var $injectedContent = self.getWrapperInjectedContent($element);
 
       // Prepare consent check data.
       var consentData = self.getData($element);
-
-      if (consentData.vendorId) {
+      if (consentData.vendorId || consentData.purposeIds) {
         // Check consent based on vendor/purpose(s).
-        __tcfapi('checkConsent', null, function (data, success) {
-          if (data) {
-            if (!self.isContentInjected($element)) {
-              $injectedContent.append(self.getContent($element));
-              $placeholder.hide();
-              Drupal.attachBehaviors($injectedContent.get(0), drupalSettings);
-              $element.attr('aria-expanded', 'true');
+        __tcfapi('getCustomVendorConsents', 2, function (data, success) {
+          if (success) {
+            let consentForVendorWasGiven = false;
+            let consentForPurposeWasGiven = false;
+            // Check for Vendor Consent.
+            if (Array.isArray(data.consentedVendors)) {
+              data.consentedVendors.forEach((vendor) => {
+                if (vendor._id === consentData.vendorId) {
+                  consentForVendorWasGiven = true;
+                }
+              });
             }
-          }
-          else {
+            // Check for Purpose Consent.
+            if (Array.isArray(data.consentedPurposes)) {
+              consentForPurposeWasGiven = data.consentedPurposes.some(item => consentData.purposeIds.includes(item._id));
+            }
+            // If at least one of them was given, render injected content.
+            if (consentForVendorWasGiven || consentForPurposeWasGiven) {
+              if (!self.isContentInjected($element)) {
+                self.activateContent($element);
+              }
+            } else {
+              self.disableContent($element);
+            }
+          } else {
+            // Show placeholder in case there is no success in getCustomVendorConsents call.
             Drupal.detachBehaviors($injectedContent.get(0), drupalSettings);
             $injectedContent.html('');
             $placeholder.show();
             $element.attr('aria-expanded', 'false');
           }
-        }, {
-          data: [consentData],
-          recheckConsentOnChange: true
         });
       }
     },
@@ -114,7 +131,7 @@
 
       // Prepare consent check data.
       var data = {
-        vendorId: vendorId
+        vendorId: vendorId,
       };
 
       if (purposeIds) {
@@ -130,11 +147,11 @@
      * @param {jQuery} $element
      *   A jQuery DOM fragment that represents the conditional content element.
      *
-     * @return {Number}
+     * @return {String}
      *   The related vendor ID.
      */
     getVendorId: function getVendorId($element) {
-      return Number($element.attr('data-burda-cmp-vendor'));
+      return $element.attr('data-burda-cmp-vendor');
     },
 
     /**
@@ -148,11 +165,9 @@
      */
     getPurposeIds: function getPurposeIds($element) {
       var purposeIds = $element.attr('data-burda-cmp-purposes');
-
       purposeIds = !purposeIds ? null : purposeIds.split(',').map(function (item) {
-        return Number($.trim(item));
+        return $.trim(item);
       });
-
       return purposeIds;
     },
 
@@ -205,7 +220,7 @@
      *   A jQuery DOM fragment that represents the conditional content element.
      */
     showConsentManager: function showConsentManager($element) {
-      __tcfapi('showConsentManager', null, function () {});
+      window._sp_.gdpr.loadPrivacyManagerModal(drupalSettings.burdaCmp.privacyManagerId);
     },
 
     /**
@@ -215,9 +230,9 @@
      *   A jQuery DOM fragment that represents the conditional content element.
      */
     toggleConsent: function toggleConsent($element) {
+      var self = this;
       // Prepare consent check data.
       var consentData = this.getData($element);
-
       if (consentData.vendorId) {
         // Rewrite consent data to have vendor ID as array.
         consentData.vendorIds = [consentData.vendorId];
@@ -227,15 +242,41 @@
           // Remove purpose IDs to only reject specific vendor but not all of
           // its purposes.
           delete consentData.purposeIds;
+          // @TODO Remove given consent to sourcepoint. At which point can this
+          //  be the case? Because when consent is given, the button will not
+          //  be rendered.
+          // __tcfapi('reject', null, function () {}, consentData);
+        } else {
+          // Send given consent to sourcepoint. Only the vendor.
+          // See https://sourcepoint-public-api.readme.io/reference/postcustomconsent#command
+          // __tcfapi('postCustomConsent', 2, callback_fn, [vendorIds], [purposeIds], [legitimateInterestPurposeIds] )
+          __tcfapi('postCustomConsent', 2, (data, success) => {
+            if (success) {
+              self.activateContent($element);
+            }
+          }, consentData.vendorIds, consentData.purposeIds, []);
 
-          __tcfapi('reject', null, function () {}, consentData);
-        }
-
-        else {
-          __tcfapi('accept', null, function () {}, consentData);
         }
       }
-    }
+    },
+    activateContent: function activateContent($element) {
+      var self = this;
+      var $placeholder = self.getWrapperPlaceholder($element);
+      var $injectedContent = self.getWrapperInjectedContent($element);
+      $injectedContent.append(self.getContent($element));
+      $placeholder.hide();
+      Drupal.attachBehaviors($injectedContent.get(0), drupalSettings);
+      $element.attr('aria-expanded', 'true');
+    },
+    disableContent: function disableContent($element) {
+      var self = this;
+      var $placeholder = self.getWrapperPlaceholder($element);
+      var $injectedContent = self.getWrapperInjectedContent($element);
+      Drupal.detachBehaviors($injectedContent.get(0), drupalSettings);
+      $injectedContent.html('');
+      $placeholder.show();
+      $element.attr('aria-expanded', 'false');
+    },
   };
 
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, jQuery, once, drupalSettings);

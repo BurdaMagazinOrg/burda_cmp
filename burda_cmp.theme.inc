@@ -54,6 +54,4 @@ function template_preprocess_burda_cmp_conditional_content(&$variables) {
     return trim($item);
   }, $variables['purposes']);
 
-  // Sort purpose IDs.
-  sort($variables['purposes']);
 }

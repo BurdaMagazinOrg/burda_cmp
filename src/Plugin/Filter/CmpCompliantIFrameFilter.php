@@ -124,7 +124,7 @@ class CmpCompliantIFrameFilter extends FilterBase implements ContainerFactoryPlu
       $result->setProcessedText(Html::serialize($dom))
         ->addAttachments([
           'library' => [
-            'burda_cmp/liveramp.conditional-content',
+            'burda_cmp/sourcepoint.conditional-content',
           ],
         ]);
     }
